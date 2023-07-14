@@ -1,0 +1,445 @@
+#!mitmdump -s
+from operator import truediv
+import requests
+import http.client as pager
+from logging import StringTemplateStyle, fatal
+import queue
+import pdpyras
+import mitmproxy
+from mitmproxy import ctx, http,websocket
+import json
+import re
+import asyncio
+import random
+import time
+from mitmproxy import ctx, http
+import asyncio
+from datetime import datetime
+listTuKhoa = ["CẦU THỜI ĐẠI","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI","55/107A/09","Tân Túc","Phong Phú","Phú Xuân","Block P1 Apartment 12-05","the sol city","Hưng Long, Bình Chánh","HUỲNH KIM THOA","TEST"]
+khachHamtai = ["x619d946cd08349862cb633e6","x61e7ab4d12f7b163a7af5709","x637b6ede4acce81e1b437e74","x63bba7454f34bc0503225099","x62d17581f573655d8feeb204","x62d17581f573655d8feeb204","2T5oeoHGqQrs5LuXj","bqYKDMbChBJ72ybjX","x6083d67e3ebdfaea58fc0c71","x6335625bdb2dd2e8530cd7df","hc5WnW8RhaEwDgMbc","x63b7cb884f34bc0503221a69","x61b2e0d312f7b163a7ae9532","x61b2e0d312f7b163a7ae9532","x63347891db2dd2e8530ccfdb","x636be1e84acce81e1b42f828","aDcGYBCREFNJX4RN8","x62dca7daf573655d8feefb4d","3tBjSud7xG8F8zmBA","x63abf1554f34bc050321974c","x61db93f312f7b163a7af1c26","xoMJfDxLCpZckXTgX","NQenugruyj3ekC3gw","x60e47b1dad0f3a2c458475c8","kP6wActWFGejuezd6","x62cae614f573655d8fee8384","x63326ee9db2dd2e8530cb8e6","xariFQnSrTSMnbKut","tSs4Aw44XJ9BJw6Ce","x62c8c196f573655d8fee7242","x6181638540ce82836e21e53d","tHveMDhY2CWycCbHe","x639fd9de13521493e9ed42dd","GXvrbeDjucwBT3DNT","x635a47584acce81e1b425927","J3QmbP73FSoCateZg","je7Sq3A8aSBjJzhKg","r72xyTmbqaXm3pSx3","sBdFzjApnGhWPaJGz","x62b909def573655d8fee1671","x618881ae40ce82836e21f940","x637a11004acce81e1b437343","x6299e189f573655d8fed679d"]
+employeeIdList = {}
+employeeIdList["khuvuc1"] = ["WQ7F4GcpRsZ8ysqAa","hrKQ2D6gZFXCu6erC","MYfbS4ge3yBfyTfSa","qsnoA2DLnaEFH7gBY","oAyYZcR6g2wc2nJzu"]
+employeeIdList["khuvuc2"] = ["jQX5yMD5vNFa7bHPN","YgDY5nDi3twTSy6ES","GkfBMpS2Bu2XvDrhm","Wj7Ncs7xTQmZe8WmH"]
+employeeIdList["all"] = employeeIdList["khuvuc1"] + employeeIdList["khuvuc2"]
+#from mitmproxy.proxy import protocol
+#def websocket_message(flow:websocket.WebSocketFlow):
+class BlockURLAddon:
+    def websocket_start(self, flow: http.HTTPFlow) -> None:
+        ketqua = getAwaitTask()
+        if ketqua != None:
+            if len(ketqua)>0:
+                for x in ketqua:
+                    print("Co don moi tu await task")
+                    checkNhanDon(x["_id"])
+        with open("close.json",mode="w",encoding="utf-8") as f:
+            time.sleep(3)
+            f.write("False")
+    def websocket_end(self, flow: http.HTTPFlow) -> None:
+        # Kiểm tra nếu kết nối WebSocket bị đóng
+        if flow.websocket.get_state != None:
+            with open("close.json",mode="w",encoding="utf-8") as f:
+                f.write("True")
+    def request(self, flow: http.HTTPFlow) -> None:
+        # if "api.btaskee.com/v2/task" in flow.request.url:
+        #     # Tạo URL mới bằng cách loại bỏ tham số userId
+        #     new_url = flow.request.url.split('&')[0]
+
+        #     # Cập nhật URL trong flow.request
+        #     flow.request.url = new_url
+        # khóa get user
+        if flow.request.method == "POST" and flow.request.pretty_url == "https://api.btaskee.com/api/v3/api-tasker-vn/get-user-by-id":
+            data = '{    "TCBankNumber": "19038227598016",    "_id": "cdTh3MRr58vEPRB6k",    "acceptPermission": true,    "address": "Quận 12",    "appVersion": "3.0.0",    "avatar": "https://btaskee-stag.s3-ap-southeast-1.amazonaws.com/avatarUploads/n4L7ERo6FrQmmPMbS",    "avgRating": 4.93,    "badges": [        {            "name": "CHEERFUL",            "numOfBadges": 18        },        {            "name": "ON_TIME",            "numOfBadges": 19        },        {            "name": "FRIENDLY",            "numOfBadges": 17        },        {            "name": "CLEAN",            "numOfBadges": 19        }    ],    "checkInput": "TRAINING_INPUT",    "company": {        "acceptPermission": true,        "companyId": "cdTh3MRr58vEPRB6k"    },    "countryCode": "+84",    "createdAt": "2020-05-29T07:58:30.385Z",    "employeeIds": [        "8EQXJMuNRmhmMZsGo",        "GsEbARAMKL39MckJW",        "HvyJ3ZTEoJXt5LMHY",        "RnCLzibDqKfZ8DZCi",        "WQ7F4GcpRsZ8ysqAa",        "Z36QkasdQnzrym3jC",        "cdTh3MRr58vEPRB6k",        "hrKQ2D6gZFXCu6erC",        "jQX5yMD5vNFa7bHPN",        "qrLjuSCwwRt289JMW",        "qsnoA2DLnaEFH7gBY",        "vjYr6aWnQDeGpnC7b",        "ekC9SBWp55zWZ5S5A",        "YgDY5nDi3twTSy6ES",        "GkfBMpS2Bu2XvDrhm",        "MYfbS4ge3yBfyTfSa",        "oAyYZcR6g2wc2nJzu",        "Wj7Ncs7xTQmZe8WmH"    ],    "fAccountId": "m9vwnjWdWY9A6BEHQ",    "idNumber": "281057517",    "isCompany": true,    "isEmployee": false,    "isoCode": "VN",    "language": "vi",    "level": {        "calculateAt": "2023-06-30T17:01:01.122Z",        "level": 2,        "previousLevel": 2    },    "nDoneTaskInMonth": 62,    "name": "Huỳnh Anh Duy",    "noReceiveNotification": false,    "phone": "0938040014",    "referralCode": "nhduyi6c7",    "status": "ACTIVE",    "taskDone": 5564,    "trainingPermission": {        "ableDoQuizz": true,        "resetData": false,        "testAll": false,        "testList": []    },    "type": "TASKER",    "voiceCallToken": {        "status": "ACTIVE",        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InN0cmluZ2VlLWFwaTt2PTEifQ.eyJqdGkiOiJTS3pGaDRSTlRiOFVYWkwxUGxFb244aWNBcVNCMkVxc0ItMTU5MDczOTExMCIsImlzcyI6IlNLekZoNFJOVGI4VVhaTDFQbEVvbjhpY0FxU0IyRXFzQiIsImV4cCI6NDcwMTEzOTExMCwidXNlcklkIjoiY2RUaDNNUnI1OHZFUFJCNmsiLCJpYXQiOjE1OTA3MzkxMTB9.O5uWg_5IzEP3VBnp9lYKwDTlkzrD7HgGRuGLgD7KxLg"    },    "workingPlaces": [        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Quận 2"        },        {            "city": "Bình Dương",            "country": "VN",            "district": "Dĩ An"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Bình Thạnh"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Thủ Đức"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Quận 7"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Củ Chi"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Quận 4"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Quận 11"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Bình Chánh"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Hóc Môn"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Gò Vấp"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Tân Phú"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Quận 5"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Phú Nhuận"        },        {            "city": "Hồ Chí Minh",            "country": "VN",            "district": "Quận 9"        }    ]}'
+            flow.response = http.Response.make(200,data,{"Content-Type": "application/json"} )
+        # khóa đẩy thông báo
+        if flow.request.method == "GET" and flow.request.pretty_url == "https://api.btaskee.com/v2/notification?accessKey=yIYrgUWxCqYThtE1YclRhnmKlvyYvlZE&userId=cdTh3MRr58vEPRB6k":
+            ctx.log.info("Blocking GET request to URL: " + flow.request.pretty_url)
+            flow.response = http.Response.make(403)
+
+addons = [
+    BlockURLAddon()
+]
+def websocket_message(flow: http.HTTPFlow):
+    #flow.messages[-1].content=""
+    data=bytes(flow.websocket.messages[-1].content).decode() 
+    data=data.replace("O'", "")
+    data=data.replace("'", "\"")
+    data=data.replace("True", "\"True\"")
+    data=data.replace("False", "\"False\"")
+    data=data.replace("None", "\"None\"")
+    data=data.replace("\n","")
+    data=data.replace("null","\"null\"")
+    #print(vars(flow.messages[-1]))
+    hopLe = False
+    try:
+        #Đoạn này bypass logout khi bị đăng nhập trên thiết bị khác
+        # if "TOKEN_EXPIRED" in data:
+        #     flow.websocket.messages[-1].drop()
+        # else:
+        #     data=json.loads(data)
+        #     hopLe = True
+        data=json.loads(data)
+        if "acceptedTasker" not in data["data"].keys() and "status" in data["data"].keys() and data["data"]["status"] == "POSTED":
+            hopLe = True
+        else:
+            flow.websocket.messages[-1].drop()
+    except:
+        flow.websocket.messages[-1].drop()
+    if hopLe:
+        if "acceptedTasker" not in data["data"].keys() and "status" in data["data"].keys():
+            print("Co don moi")
+            print(data)
+            checkNhanDon(data["data"]["_id"])
+            
+            
+
+def checkNhanDon(taskID):
+    isLate = False
+    dt_now = datetime.now()
+    thongTinDon = getDetailsTask(taskID)
+    if("acceptedTasker" in json.dumps(thongTinDon,ensure_ascii=False)):
+        isLate = True
+    print(thongTinDon)
+    
+    dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+    quanLamViec = thongTinDon["taskPlace"]["district"]
+    thanhPhoLamViec = thongTinDon["taskPlace"]["city"]
+    # Block thành phố và quận
+    if thanhPhoLamViec == "Bình Dương":
+        if (quanLamViec != "Thuận An") or (quanLamViec != "Thủ Dầu Một") :
+            isLate = True
+    if ((quanLamViec == "Cần Giờ") or (quanLamViec == "Củ Chi")):
+        isLate = True
+    # Block nhận đơn trễ
+    #Không nhận đơn trước
+    if dt_object.timestamp() < 1680847000:
+        isLate = True
+    # Check đơn trễ
+    if quanLamViec  == "Thủ Đức" or quanLamViec  == "Quận 2" or quanLamViec  == "Bình Thạnh" or quanLamViec  == "Phú Nhuận":
+        if dt_object.hour == 18 and dt_object.minute > 30:
+            isLate = True
+        if dt_object.hour > 18:
+            isLate = True
+        if (dt_object.hour < 8):
+            isLate = True
+        if dt_object.hour == 16 and dt_object.minute > 30:
+            if dt_object.day == dt_now.day:
+                if dt_now.hour > 16:
+                    isLate = True
+                if dt_now.hour == 16 and dt_now.minute > 30:
+                    isLate = True
+                if thongTinDon["cost"] < 350000:
+                    isLate = True
+            else:
+                if thongTinDon["cost"] < 350000:
+                    isLate = True
+        if dt_object.hour == 17:
+            if dt_object.day == dt_now.day:
+                if dt_now.hour > 16:
+                    isLate = True
+                if dt_now.hour == 16 and dt_now.minute > 30:
+                    isLate = True
+                #if thongTinDon["cost"] < 500000:
+                    #isLate = True
+            #else:
+                #if thongTinDon["cost"] < 500000:
+                    #isLate = True
+        if dt_object.hour == 18 and dt_object.minute <= 30:
+            if dt_object.day == dt_now.day:
+                if dt_now.hour > 16:
+                    isLate = True
+                if dt_now.hour == 16 and dt_now.minute > 30:
+                    isLate = True
+                #if thongTinDon["cost"] < 500000:
+                    #isLate = True
+            #else:
+                #if thongTinDon["cost"] < 500000:
+                    #isLate = True
+    else:
+        if dt_object.hour == 16 and dt_object.minute > 50:
+            isLate = True
+        if dt_object.hour > 16:
+            isLate = True
+        if (dt_object.hour < 8):
+            isLate = True
+    if (dt_object.weekday()>4):
+        if (dt_object.hour >= 17) or (dt_object.hour < 8):
+            isLate = True
+
+    #Check từ khóa không nhận trong ghi chú
+    if "note" in thongTinDon.keys():
+        ghichu = thongTinDon["note"]
+        if ("RÈM CAO" in ghichu.upper()) or ("LẮP GIÀN GIÁO" in ghichu.upper()) or ("SOFA MÀU TRẮNG KEM" in ghichu.upper() or ("XÃ BÌNH CHÁNH" in ghichu.upper())or ("X. BÌNH CHÁNH" in ghichu.upper())): 
+            isLate = True
+    # Các ngày lễ trong năm
+    if dt_object.month == 1 and dt_object.day >= 20:
+        isLate = True
+    if dt_object.month == 1 and dt_object.day == 1:
+        isLate = True
+    if dt_object.month == 4 and dt_object.day == 30:
+        isLate = True
+    if dt_object.month == 4 and dt_object.day == 29:
+        isLate = True
+    if dt_object.month == 5 and dt_object.day == 1:
+        isLate = True
+    if dt_object.month == 9 and dt_object.day == 2:
+        isLate = True
+    # Khách hàng hãm tài
+    if thongTinDon["askerId"] in khachHamtai:
+        isLate = True
+
+    # Loại bỏ đơn chỉ có rèm nước
+    if ("washing" in json.dumps(thongTinDon,ensure_ascii=False)) and ("curtain" in json.dumps(thongTinDon,ensure_ascii=False)):
+        if thongTinDon["cost"] < 600000:
+            isLate = True
+    thongTinDonUpper = json.dumps(thongTinDon,ensure_ascii=False).upper()
+    for x in listTuKhoa:
+        if x.upper() in thongTinDonUpper:
+            isLate = True
+            break
+    if thongTinDon["cost"] > 299999 and isLate == False:
+        a=random.uniform(800,1500)
+        time.sleep(a/1000)
+        bockID = thongTinDon["_id"]
+        print(bockID)
+        result = bookingTask(bockID,quanLamViec)# đặt đơn
+        if result == 1:
+            #Gửi thông báo vô pager duty
+            pagerDuty(bockID)
+        else:
+            pagerDutyLoss()
+    else:
+    # Ghi thông tin không nhận đơn
+        with open('danhsachkhongnhan.json','a',encoding="utf-8") as f:
+            contentDumps = json.dumps(thongTinDon, ensure_ascii=False)
+            f.writelines(contentDumps+"\n") 
+
+def getAwaitTask():
+    url = " https://api.btaskee.com/api/v3/api-tasker-vn/get-posted-waiting-tasks"
+    payload = json.dumps({
+    "limit": 20,
+    "page": 1,
+    "sortBy": "CREATED_AT_DECREASE",
+    "userId": "cdTh3MRr58vEPRB6k"
+    })
+    headers = {
+    'accept': 'application/json, text/plain, */*',
+    'accesskey': 'yIYrgUWxCqYThtE1YclRhnmKlvyYvlZE',
+    'content-type': 'application/json',
+    'user-agent': 'okhttp/4.9.2'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    if(response.status_code == 200):
+        return json.loads(response.text)["newTasks"]
+    else:
+        print("Lấy thông tin đơn không thành công")
+def getDetailsTask(taskID):
+    url = "https://api.btaskee.com/api/v3/api-tasker-vn/get-task-detail"
+    payload = json.dumps({
+    "taskId": taskID,
+    "userId": "cdTh3MRr58vEPRB6k"
+    })
+    headers = {
+    'accept': 'application/json, text/plain, */*',
+    'accesskey': 'yIYrgUWxCqYThtE1YclRhnmKlvyYvlZE',
+    'content-type': 'application/json',
+    'user-agent': 'okhttp/4.9.2'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    if(response.status_code == 200):
+        return json.loads(response.text)
+    else:
+        print("Lấy thông tin đơn không thành công")
+def bookingTask(bockId,district):
+    # đọc thông tin nhân viên hiện tại
+    with open("configCurrentEmployIDs.json","r") as f:
+        configCurentIds = json.loads(f.readline())
+    districtKV1 = "Quận 2, Quận 9, Thủ Đức"
+    districtKV2 = "Quận 12, Quận 11, Quận 6,Tân Phú, Bình Tân, Hóc Môn, Củ Chi"
+    if district in districtKV1:
+        employeeId = employeeIdList["khuvuc1"][configCurentIds["khuvuc1"]]
+        configCurentIds["khuvuc1"] = configCurentIds["khuvuc1"] + 1
+        if configCurentIds["khuvuc1"] >= len(employeeIdList["khuvuc1"]):
+            configCurentIds["khuvuc1"] = 0
+    elif district in districtKV2:
+        employeeId = employeeIdList["khuvuc2"][configCurentIds["khuvuc2"]]
+        configCurentIds["khuvuc2"] = configCurentIds["khuvuc2"] + 1
+        if configCurentIds["khuvuc2"] >= len(employeeIdList["khuvuc2"]):
+            configCurentIds["khuvuc2"] = 0
+    else:
+        employeeId = employeeIdList["all"][configCurentIds["all"]]
+        configCurentIds["all"] = configCurentIds["all"] + 1
+        if configCurentIds["all"] >= len(employeeIdList["all"]):
+            configCurentIds["all"] = 0
+    url = "https://api.btaskee.com/api/v2/accept-booking/accept"
+    payload = json.dumps({
+    "taskId": bockId,
+    "taskerId": employeeId,
+    "companyId": "cdTh3MRr58vEPRB6k",
+    "appVersion": "3.0.0"
+    })
+    headers = {
+    'accept': 'application/json, text/plain, */*',
+    'accesskey': 'yIYrgUWxCqYThtE1YclRhnmKlvyYvlZE',
+    'content-type': 'application/json',
+    'user-agent': 'okhttp/4.9.2'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text)
+    result = 0
+    if response.status_code != 200:
+        for x in random.sample(range(len(employeeIdList["all"])-1),len(employeeIdList["all"])-1):
+            url = "https://api.btaskee.com/api/v2/accept-booking/accept"
+            payload = json.dumps({
+            "taskId": bockId,
+            "taskerId": employeeIdList["all"][x],
+            "companyId": "cdTh3MRr58vEPRB6k",
+            "appVersion": "3.0.0"
+            })
+            headers = {
+            'accept': 'application/json, text/plain, */*',
+            'accesskey': 'yIYrgUWxCqYThtE1YclRhnmKlvyYvlZE',
+            'content-type': 'application/json',
+            'user-agent': 'okhttp/4.9.2'
+            }
+            response = requests.request("POST", url, headers=headers, data=payload)
+            print(response.text)
+            if response.status_code == 200:
+                result = 1
+                break
+    else:
+        result = 1
+    with open("configCurrentEmployIDs.json","w") as f:
+        f.write(json.dumps(configCurentIds))
+    return result
+def pagerDutyLoss():
+    conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
+    tentieude = "Mất đơn, vô kiểm tra ngay"
+    payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client"},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\"}"""
+    conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
+    res = conn.getresponse()
+    info = res.read()
+def pagerDuty(taskID):
+    thongTinDon = getDetailsTask(taskID)
+    doigiolam = False
+    listResolved = []
+    # Check Trung Don
+    # Get all incidents
+    session = pdpyras.APISession('u+APm6HyXdztzDX-xomw',default_from="kwj85910@eoopy.com")
+    incidents = session.list_all(
+        'incidents',
+        params={'user_ids[]':['PPQK4XC'],'statuses[]':['triggered']}
+    )
+    for x in incidents:
+        url = "/incidents/" + x["id"] + "/alerts"
+        a = session.get(url=url)
+        b = json.loads(a.text)
+        if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
+                continue
+        if taskID == b["alerts"][0]["body"]["details"]["id"]:
+            x["status"] = 'resolved'
+            listResolved.append(x)
+            doigiolam = True
+            pdated_incidents = session.rput('incidents',json=listResolved)
+
+    dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+    if thongTinDon["serviceId"] != "A4BieMZxbrtKeb6WEx1":
+        conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
+        data1={}
+        data1["id"] = taskID
+        data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
+        data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
+        data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
+        data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
+        try:
+            data1["Ghi Chú"] = thongTinDon["note"]
+        except:
+            pass
+        data1["Tên khách"]=thongTinDon["contactName"]
+        data1["STD khách"]=thongTinDon["phone"]
+        data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+        date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+        data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
+        try:
+            ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
+        except:
+            ban_do="Khong co ban do"
+        strSofa=""
+        if "sofa" in thongTinDon["detail"]:
+            for x in thongTinDon["detail"]["sofa"]:
+                if "typeSofa" in x:
+                    for y in x["typeSofa"]:
+                        strSofa+=y["text"]["vi"] + ": Số lượng: "+str(y["quantity"])+" ,"
+                else:
+                    for y in x["stool"]:
+                        strSofa+=y["text"]["vi"] + ": Số lượng: "+str(y["quantity"])+" ,"
+            data1["Sofa"] = strSofa
+        strNem=""
+        if "mattress" in thongTinDon["detail"]:
+            for x in thongTinDon["detail"]["mattress"]:
+                strNem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+            data1["Nệm"] = strNem
+        strRem=""
+        if "curtain" in thongTinDon["detail"]:
+            if "dryclean" in thongTinDon["detail"]["curtain"]:
+                for x in thongTinDon["detail"]["curtain"]["dryclean"]:
+                    strRem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+            if "washing" in thongTinDon["detail"]["curtain"]:
+                for x in thongTinDon["detail"]["curtain"]["washing"]:
+                    if "vi" in x:
+                        strRem+="Giặt nước: "+x["text"]["vi"] +" ,"
+                    else:
+                        strRem+="Giặt nước: "+x["text"]["en"] +" ,"
+            data1["Rèm"] = strRem
+        strTham=""
+        if "carpet" in thongTinDon["detail"]:
+            for x in thongTinDon["detail"]["carpet"]:
+                strTham+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+            data1["Thảm"] = strTham
+        tentieude = ""
+        if doigiolam:
+            tentieude = "Có đơn sofa mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)") + " Đổi giờ làm"
+        else:
+            tentieude = "Có đơn sofa mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)")
+        payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client","timestamp":\""""+dt_object.isoformat()+"""\","custom_details":"""+json.dumps(data1)+"""},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\""""
+        payload+=""","links": [{"href": \""""+ban_do+"""\","text": "Click đây để xem bản đồ"}]}"""
+        conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
+        res = conn.getresponse()
+        info=res.read()
+        #print(payload)
+    else:
+        conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
+        data1={}
+        data1["id"] = taskID
+        data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
+        data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
+        data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
+        data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
+        try:
+            data1["Ghi Chú"] = thongTinDon["note"]
+        except:
+            pass
+        data1["Tên khách"]=thongTinDon["contactName"]
+        data1["STD khách"]=thongTinDon["phone"]
+        data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+        date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+        data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
+        ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
+        if "customArea" in json.dumps(thongTinDon):
+            data1["Khử khuẩn"] = thongTinDon["detail"]["spaceText"]["vi"] + " diện tích "+ str(thongTinDon["detail"]["customArea"])
+        elif "option2" in json.dumps(thongTinDon) or "option3" in json.dumps(thongTinDon):
+            data1["Khử khuẩn"] = thongTinDon["detail"]["area"]["name"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
+        elif "option1" in json.dumps(thongTinDon) or "option3" in json.dumps(thongTinDon):
+            data1["Khử khuẩn"] = thongTinDon["detail"]["area"]["name"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
+        else:
+            data1["Khử khuẩn"] = thongTinDon["detail"]["spaceText"]["vi"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
+        tentieude = ""
+        if doigiolam:
+            tentieude = "Có đơn khử khuẩn mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)") + " Đổi giờ làm"
+        else:
+            tentieude = "Có đơn khử khuẩn mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)")
+        payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client","timestamp":\""""+dt_object.isoformat()+"""\","custom_details":"""+json.dumps(data1)+"""},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\""""
+        payload+=""","links": [{"href": \""""+ban_do+"""\","text": "Click đây để xem bản đồ"}]}"""
+        conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
+        res = conn.getresponse()
+        info=res.read()
+        #print(payload)
