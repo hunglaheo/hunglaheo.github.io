@@ -111,7 +111,7 @@ def checkNhanDon(taskID):
         isLate = True
     # Block nhận đơn trễ
     #Không nhận đơn trước
-    if dt_object.timestamp() < 1680847000:
+    if dt_object.timestamp() < 1689395400:
         isLate = True
     # Check đơn trễ
     if quanLamViec  == "Thủ Đức" or quanLamViec  == "Quận 2" or quanLamViec  == "Bình Thạnh" or quanLamViec  == "Phú Nhuận":
