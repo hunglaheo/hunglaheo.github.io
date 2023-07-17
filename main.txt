@@ -111,8 +111,15 @@ def checkNhanDon(taskID):
         isLate = True
     # Block nhận đơn trễ
     #Không nhận đơn trước
-    if dt_object.timestamp() < 1689395400:
-        isLate = True
+    with open("datgiokhongnhandon.txt","r") as f:
+        stringTime = f.readline()
+    if(len(stringTime)>10):
+        stringTime = stringTime[:10]
+    try:
+        if dt_object.timestamp() < int(stringTime):
+            isLate = True
+    except:
+        print("Lỗi dòng 114")
     # Check đơn trễ
     if quanLamViec  == "Thủ Đức" or quanLamViec  == "Quận 2" or quanLamViec  == "Bình Thạnh" or quanLamViec  == "Phú Nhuận":
         if dt_object.hour == 18 and dt_object.minute > 30:
