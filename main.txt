@@ -32,7 +32,7 @@ class BlockURLAddon:
                     print("Co don moi tu await task")
                     checkNhanDon(x["_id"])
         with open("close.json",mode="w",encoding="utf-8") as f:
-            time.sleep(3)
+            #time.sleep(3)
             f.write("False")
     def websocket_end(self, flow: http.HTTPFlow) -> None:
         # Kiểm tra nếu kết nối WebSocket bị đóng
