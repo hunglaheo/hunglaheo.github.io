@@ -356,6 +356,7 @@ def pagerDuty(taskID):
         data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
         data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
         data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
+        data1["Giá promotion"] = str(+thongTinDon["promotion"])+"VND"
         data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
         try:
             data1["Ghi Chú"] = thongTinDon["note"]
@@ -420,6 +421,7 @@ def pagerDuty(taskID):
         data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
         data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
         data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
+        data1["Giá promotion"] = str(+thongTinDon["promotion"])+"VND"
         data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
         try:
             data1["Ghi Chú"] = thongTinDon["note"]
