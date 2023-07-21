@@ -178,8 +178,8 @@ def checkNhanDon(taskID):
         if ("RÈM CAO" in ghichu.upper()) or ("LẮP GIÀN GIÁO" in ghichu.upper()) or ("SOFA MÀU TRẮNG KEM" in ghichu.upper() or ("XÃ BÌNH CHÁNH" in ghichu.upper())or ("X. BÌNH CHÁNH" in ghichu.upper())): 
             isLate = True
     # Các ngày lễ trong năm
-    if dt_object.month == 1 and dt_object.day >= 20:
-        isLate = True
+    # if dt_object.month == 1 and dt_object.day >= 20:
+    #     isLate = True
     if dt_object.month == 1 and dt_object.day == 1:
         isLate = True
     if dt_object.month == 4 and dt_object.day == 30:
