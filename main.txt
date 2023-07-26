@@ -12,6 +12,7 @@ import re
 import asyncio
 import random
 import time
+import pycountry
 from mitmproxy import ctx, http
 import asyncio
 from datetime import datetime, timedelta,timezone
@@ -331,6 +332,29 @@ def pagerDutyLoss():
     conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
     res = conn.getresponse()
     info = res.read()
+def getNational(name):
+    try:
+        url = "https://v2.namsor.com/NamSorAPIv2/api2/json/countryBatch"
+        payload = {
+        "personalNames": [
+            {
+            "name": name
+            }
+        ]
+        }
+        headers = {
+            "X-API-KEY": "59db60683c685763b28aa342d70a83df",
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+        response = requests.request("POST", url, json=payload, headers=headers)
+        result = json.loads(response.text)
+        quocgia = pycountry.countries.get(alpha_2=result["personalNames"][0]["country"])
+        tenquocgia = quocgia.name
+        return tenquocgia
+    except:
+        return "Không biết"
+
 def pagerDuty(taskID):
     thongTinDon = getDetailsTask(taskID)
     doigiolam = False
@@ -369,6 +393,7 @@ def pagerDuty(taskID):
         except:
             pass
         data1["Tên khách"]=thongTinDon["contactName"]
+        data1["Quốc gia"] = getNational(thongTinDon["contactName"])
         data1["STD khách"]=thongTinDon["phone"]
         data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
         date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
@@ -434,6 +459,7 @@ def pagerDuty(taskID):
         except:
             pass
         data1["Tên khách"]=thongTinDon["contactName"]
+        data1["Quốc gia"] = getNational(thongTinDon["contactName"])
         data1["STD khách"]=thongTinDon["phone"]
         data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
         date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
