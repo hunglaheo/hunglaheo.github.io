@@ -6,7 +6,6 @@ import json
 import http.client as pager
 from datetime import datetime
 import requests
-import pycountry
 from dateutil.parser import parse
 #session = pdpyras.APISession('610683d180d44e09c0d1aa66ba22ae32')
 def getDetailsTask1(taskID):
@@ -59,134 +58,132 @@ def getNational(name):
     except:
         return "Không biết"
 def pagerDuty(taskID):
-    thongTinDon = getDetailsTask(taskID)
-    doigiolam = False
-    listResolved = []
-    # Check Trung Don
-    # Get all incidents
-    session = pdpyras.APISession('u+APm6HyXdztzDX-xomw',default_from="kwj85910@eoopy.com")
-    incidents = session.list_all(
-        'incidents',
-        params={'user_ids[]':['PPQK4XC'],'statuses[]':['triggered']}
-    )
-    for x in incidents:
-        url = "/incidents/" + x["id"] + "/alerts"
-        a = session.get(url=url)
-        b = json.loads(a.text)
-        if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
-                continue
-        if taskID == b["alerts"][0]["body"]["details"]["id"]:
-            x["status"] = 'resolved'
-            listResolved.append(x)
-            doigiolam = True
-            pdated_incidents = session.rput('incidents',json=listResolved)
+    thongTinDon = getDetailsTask1(taskID)
+    if thongTinDon != None:
+        doigiolam = False
+        listResolved = []
+        # Check Trung Don
+        # Get all incidents
+        session = pdpyras.APISession('u+APm6HyXdztzDX-xomw',default_from="kwj85910@eoopy.com")
+        incidents = session.list_all(
+            'incidents',
+            params={'user_ids[]':['PPQK4XC'],'statuses[]':['triggered']}
+        )
+        for x in incidents:
+            url = "/incidents/" + x["id"] + "/alerts"
+            a = session.get(url=url)
+            b = json.loads(a.text)
+            if taskID == b["alerts"][0]["body"]["details"]["id"]:
+                listResolved.append(x)
+                doigiolam = True
+                pdated_incidents = session.rput('incidents',json=listResolved)
 
-    dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
-    if thongTinDon["serviceId"] != "A4BieMZxbrtKeb6WEx1":
-        conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
-        data1={}
-        data1["id"] = taskID
-        data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
-        data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
-        data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
-        data1["Giá promotion"] = str(+thongTinDon["promotion"])+"VND"
-        data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
-        try:
-            data1["Ghi Chú"] = thongTinDon["note"]
-        except:
-            pass
-        data1["Tên khách"]=thongTinDon["contactName"]
-        data1["Quốc gia"] = getNational(thongTinDon["contactName"])
-        data1["STD khách"]=thongTinDon["phone"]
-        data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
-        date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
-        data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
-        try:
-            ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
-        except:
-            ban_do="Khong co ban do"
-        strSofa=""
-        if "sofa" in thongTinDon["detail"]:
-            for x in thongTinDon["detail"]["sofa"]:
-                if "typeSofa" in x:
-                    for y in x["typeSofa"]:
-                        strSofa+=y["text"]["vi"] + ": Số lượng: "+str(y["quantity"])+" ,"
-                else:
-                    for y in x["stool"]:
-                        strSofa+=y["text"]["vi"] + ": Số lượng: "+str(y["quantity"])+" ,"
-            data1["Sofa"] = strSofa
-        strNem=""
-        if "mattress" in thongTinDon["detail"]:
-            for x in thongTinDon["detail"]["mattress"]:
-                strNem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
-            data1["Nệm"] = strNem
-        strRem=""
-        if "curtain" in thongTinDon["detail"]:
-            if "dryclean" in thongTinDon["detail"]["curtain"]:
-                for x in thongTinDon["detail"]["curtain"]["dryclean"]:
-                    strRem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
-            if "washing" in thongTinDon["detail"]["curtain"]:
-                for x in thongTinDon["detail"]["curtain"]["washing"]:
-                    if "vi" in x:
-                        strRem+="Giặt nước: "+x["text"]["vi"] +" ,"
+        dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+        if thongTinDon["serviceId"] != "A4BieMZxbrtKeb6WEx1":
+            conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
+            data1={}
+            data1["id"] = taskID
+            data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
+            data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
+            data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
+            data1["Giá promotion"] = str(+thongTinDon["promotion"])+"VND"
+            data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
+            try:
+                data1["Ghi Chú"] = thongTinDon["note"]
+            except:
+                pass
+            data1["Tên khách"]=thongTinDon["contactName"]
+            data1["Quốc gia"] = getNational(thongTinDon["contactName"])
+            data1["STD khách"]=thongTinDon["phone"]
+            data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+            date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+            data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
+            try:
+                ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
+            except:
+                ban_do="Khong co ban do"
+            strSofa=""
+            if "sofa" in thongTinDon["detail"]:
+                for x in thongTinDon["detail"]["sofa"]:
+                    if "typeSofa" in x:
+                        for y in x["typeSofa"]:
+                            strSofa+=y["text"]["vi"] + ": Số lượng: "+str(y["quantity"])+" ,"
                     else:
-                        strRem+="Giặt nước: "+x["text"]["en"] +" ,"
-            data1["Rèm"] = strRem
-        strTham=""
-        if "carpet" in thongTinDon["detail"]:
-            for x in thongTinDon["detail"]["carpet"]:
-                strTham+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
-            data1["Thảm"] = strTham
-        tentieude = ""
-        if doigiolam:
-            tentieude = "Có đơn sofa mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)") + " Đổi giờ làm"
+                        for y in x["stool"]:
+                            strSofa+=y["text"]["vi"] + ": Số lượng: "+str(y["quantity"])+" ,"
+                data1["Sofa"] = strSofa
+            strNem=""
+            if "mattress" in thongTinDon["detail"]:
+                for x in thongTinDon["detail"]["mattress"]:
+                    strNem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+                data1["Nệm"] = strNem
+            strRem=""
+            if "curtain" in thongTinDon["detail"]:
+                if "dryclean" in thongTinDon["detail"]["curtain"]:
+                    for x in thongTinDon["detail"]["curtain"]["dryclean"]:
+                        strRem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+                if "washing" in thongTinDon["detail"]["curtain"]:
+                    for x in thongTinDon["detail"]["curtain"]["washing"]:
+                        if "vi" in x:
+                            strRem+="Giặt nước: "+x["text"]["vi"] +" ,"
+                        else:
+                            strRem+="Giặt nước: "+x["text"]["en"] +" ,"
+                data1["Rèm"] = strRem
+            strTham=""
+            if "carpet" in thongTinDon["detail"]:
+                for x in thongTinDon["detail"]["carpet"]:
+                    strTham+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+                data1["Thảm"] = strTham
+            tentieude = ""
+            if doigiolam:
+                tentieude = "Có đơn sofa mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)") + " Đổi giờ làm"
+            else:
+                tentieude = "Có đơn sofa mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)")
+            payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client","timestamp":\""""+dt_object.isoformat()+"""\","custom_details":"""+json.dumps(data1)+"""},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\""""
+            payload+=""","links": [{"href": \""""+ban_do+"""\","text": "Click đây để xem bản đồ"}]}"""
+            conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
+            res = conn.getresponse()
+            info=res.read()
+            #print(payload)
         else:
-            tentieude = "Có đơn sofa mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)")
-        payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client","timestamp":\""""+dt_object.isoformat()+"""\","custom_details":"""+json.dumps(data1)+"""},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\""""
-        payload+=""","links": [{"href": \""""+ban_do+"""\","text": "Click đây để xem bản đồ"}]}"""
-        conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
-        res = conn.getresponse()
-        info=res.read()
-        #print(payload)
-    else:
-        conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
-        data1={}
-        data1["id"] = taskID
-        data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
-        data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
-        data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
-        data1["Giá promotion"] = str(+thongTinDon["promotion"])+"VND"
-        data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
-        try:
-            data1["Ghi Chú"] = thongTinDon["note"]
-        except:
-            pass
-        data1["Tên khách"]=thongTinDon["contactName"]
-        data1["Quốc gia"] = getNational(thongTinDon["contactName"])
-        data1["STD khách"]=thongTinDon["phone"]
-        data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
-        date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
-        data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
-        ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
-        if "customArea" in json.dumps(thongTinDon):
-            data1["Khử khuẩn"] = thongTinDon["detail"]["spaceText"]["vi"] + " diện tích "+ str(thongTinDon["detail"]["customArea"])
-        elif "option2" in json.dumps(thongTinDon) or "option3" in json.dumps(thongTinDon):
-            data1["Khử khuẩn"] = thongTinDon["detail"]["area"]["name"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
-        elif "option1" in json.dumps(thongTinDon) or "option3" in json.dumps(thongTinDon):
-            data1["Khử khuẩn"] = thongTinDon["detail"]["area"]["name"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
-        else:
-            data1["Khử khuẩn"] = thongTinDon["detail"]["spaceText"]["vi"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
-        tentieude = ""
-        if doigiolam:
-            tentieude = "Có đơn khử khuẩn mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)") + " Đổi giờ làm"
-        else:
-            tentieude = "Có đơn khử khuẩn mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)")
-        payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client","timestamp":\""""+dt_object.isoformat()+"""\","custom_details":"""+json.dumps(data1)+"""},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\""""
-        payload+=""","links": [{"href": \""""+ban_do+"""\","text": "Click đây để xem bản đồ"}]}"""
-        conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
-        res = conn.getresponse()
-        info=res.read()
-        #print(payload)
+            conn = pager.http.client.HTTPSConnection("events.pagerduty.com")
+            data1={}
+            data1["id"] = taskID
+            data1["Nhân viên nhận đơn"]=thongTinDon["acceptedTasker"][0]["name"]
+            data1["Địa điểm"]=thongTinDon["description"] + thongTinDon["address"]
+            data1["Giá tiền"]=str(+thongTinDon["cost"])+"VND"
+            data1["Giá promotion"] = str(+thongTinDon["promotion"])+"VND"
+            data1["Loại nhà"]=thongTinDon["homeType"]["vi"]
+            try:
+                data1["Ghi Chú"] = thongTinDon["note"]
+            except:
+                pass
+            data1["Tên khách"]=thongTinDon["contactName"]
+            data1["Quốc gia"] = getNational(thongTinDon["contactName"])
+            data1["STD khách"]=thongTinDon["phone"]
+            data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+            date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+            data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
+            ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
+            if "customArea" in json.dumps(thongTinDon):
+                data1["Khử khuẩn"] = thongTinDon["detail"]["spaceText"]["vi"] + " diện tích "+ str(thongTinDon["detail"]["customArea"])
+            elif "option2" in json.dumps(thongTinDon) or "option3" in json.dumps(thongTinDon):
+                data1["Khử khuẩn"] = thongTinDon["detail"]["area"]["name"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
+            elif "option1" in json.dumps(thongTinDon) or "option3" in json.dumps(thongTinDon):
+                data1["Khử khuẩn"] = thongTinDon["detail"]["area"]["name"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
+            else:
+                data1["Khử khuẩn"] = thongTinDon["detail"]["spaceText"]["vi"] + " từ "+ str(thongTinDon["detail"]["area"]["from"]) +" đến " + str(thongTinDon["detail"]["area"]["to"])
+            tentieude = ""
+            if doigiolam:
+                tentieude = "Có đơn khử khuẩn mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)") + " Đổi giờ làm"
+            else:
+                tentieude = "Có đơn khử khuẩn mới ở " + thongTinDon["taskPlace"]["district"] + ", " + date_obj.strftime("%d-%b-%Y (%H:%M)")
+            payload = """{"payload":{"summary":\""""+tentieude+"""\","severity":"critical","source":"Client","timestamp":\""""+dt_object.isoformat()+"""\","custom_details":"""+json.dumps(data1)+"""},"routing_key":"610683d180d44e09c0d1aa66ba22ae32","event_action":"trigger\""""
+            payload+=""","links": [{"href": \""""+ban_do+"""\","text": "Click đây để xem bản đồ"}]}"""
+            conn.request("POST", "/v2/enqueue", payload.encode('utf-8'))
+            res = conn.getresponse()
+            info=res.read()
+            #print(payload)
 
 def getDetailsTask():
     url = " https://api.btaskee.com/api/v3/api-tasker-vn/get-confirmed-tasks"
