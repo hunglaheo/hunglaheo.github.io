@@ -17,7 +17,10 @@ from mitmproxy import ctx, http
 import asyncio
 from datetime import datetime, timedelta,timezone
 listTuKhoa = ["0981540301","CẦU THỜI ĐẠI","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI","55/107A/09","Tân Túc","Phong Phú","Phú Xuân","Block P1 Apartment 12-05","the sol city","Hưng Long, Bình Chánh","HUỲNH KIM THOA","TEST"]
-khachHamtai = ["x64c3687cb83a42335f088c68","pTrES8juxqAfW2X55","x62e7e41cf573655d8fef473c","x64b8898db83a42335f084066","x64351c03c58c3f331e1861e4","x619d946cd08349862cb633e6","x61e7ab4d12f7b163a7af5709","x637b6ede4acce81e1b437e74","x63bba7454f34bc0503225099","x62d17581f573655d8feeb204","x62d17581f573655d8feeb204","2T5oeoHGqQrs5LuXj","bqYKDMbChBJ72ybjX","x6083d67e3ebdfaea58fc0c71","x6335625bdb2dd2e8530cd7df","hc5WnW8RhaEwDgMbc","x63b7cb884f34bc0503221a69","x61b2e0d312f7b163a7ae9532","x61b2e0d312f7b163a7ae9532","x63347891db2dd2e8530ccfdb","x636be1e84acce81e1b42f828","aDcGYBCREFNJX4RN8","x62dca7daf573655d8feefb4d","3tBjSud7xG8F8zmBA","x63abf1554f34bc050321974c","x61db93f312f7b163a7af1c26","xoMJfDxLCpZckXTgX","NQenugruyj3ekC3gw","x60e47b1dad0f3a2c458475c8","kP6wActWFGejuezd6","x62cae614f573655d8fee8384","x63326ee9db2dd2e8530cb8e6","xariFQnSrTSMnbKut","tSs4Aw44XJ9BJw6Ce","x62c8c196f573655d8fee7242","x6181638540ce82836e21e53d","tHveMDhY2CWycCbHe","x639fd9de13521493e9ed42dd","GXvrbeDjucwBT3DNT","x635a47584acce81e1b425927","J3QmbP73FSoCateZg","je7Sq3A8aSBjJzhKg","r72xyTmbqaXm3pSx3","sBdFzjApnGhWPaJGz","x62b909def573655d8fee1671","x618881ae40ce82836e21f940","x637a11004acce81e1b437343","x6299e189f573655d8fed679d","x6466e602c58c3f331e19ca15"]
+with open("DanhSachKhachChan.txt","r") as f:
+    khachHamtai = f.readlines()
+    for x in range(len(khachHamtai)):
+        khachHamtai[x] = khachHamtai[x].replace("\n","")
 employeeIdList = {}
 employeeIdList["khuvuc1"] = ["HvyJ3ZTEoJXt5LMHY","WQ7F4GcpRsZ8ysqAa","hrKQ2D6gZFXCu6erC","MYfbS4ge3yBfyTfSa","oAyYZcR6g2wc2nJzu","qsnoA2DLnaEFH7gBY"]
 employeeIdList["khuvuc2"] = ["jQX5yMD5vNFa7bHPN","x64a6247c025424efe76232c7","YgDY5nDi3twTSy6ES","GkfBMpS2Bu2XvDrhm","Wj7Ncs7xTQmZe8WmH"]
