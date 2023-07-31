@@ -113,11 +113,13 @@ def checkNhanDon(taskID):
     # Block nhận đơn trễ
     #Không nhận đơn trước
     with open("datgiokhongnhandon.txt","r") as f:
-        stringTime = f.readline()
-    if(len(stringTime)>10):
-        stringTime = stringTime[:10]
+        stringTime = f.readlines()
+    for x in range(2):
+        stringTime[x] = stringTime[x].replace("\n","")
+        if(len(stringTime[x])>10):
+            stringTime[x] = stringTime[x][:10]
     try:
-        if dt_object.timestamp() < int(stringTime):
+        if int(stringTime[0]) < dt_object.timestamp() < int(stringTime[1]):
             isLate = True
     except:
         print("Lỗi dòng 114")
