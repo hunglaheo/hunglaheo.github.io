@@ -395,6 +395,7 @@ def pagerDuty(taskID):
         except:
             pass
         data1["Tên khách"]=thongTinDon["contactName"]
+        data1["ID Khách"] = thongTinDon["askerId"]
         data1["Quốc gia"] = getNational(thongTinDon["contactName"])
         data1["STD khách"]=thongTinDon["phone"]
         data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
@@ -461,6 +462,7 @@ def pagerDuty(taskID):
         except:
             pass
         data1["Tên khách"]=thongTinDon["contactName"]
+        data1["ID Khách"] = thongTinDon["askerId"]
         data1["Quốc gia"] = getNational(thongTinDon["contactName"])
         data1["STD khách"]=thongTinDon["phone"]
         data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
