@@ -114,6 +114,9 @@ def checkNhanDon(taskID):
     print(thongTinDon)
     dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
     timeChenhLech = dt_object - dt_now
+    # nếu thời gian đặt đơn đến thời gian làm nhỏ hơn 60p thì không nhận
+    if timeChenhLech.days == 0 and timeChenhLech.seconds < 3600:
+        isLate = True
     quanLamViec = thongTinDon["taskPlace"]["district"]
     thanhPhoLamViec = thongTinDon["taskPlace"]["city"]
     # Block thành phố và quận
