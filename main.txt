@@ -387,8 +387,10 @@ def pagerDuty(taskID):
         url = "/incidents/" + x["id"] + "/alerts"
         a = session.get(url=url)
         b = json.loads(a.text)
+        if "Vui lòng kiểm tra lại tool"in json.dumps(b,ensure_ascii=False):
+            continue
         if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
-                continue
+            continue
         if taskID == b["alerts"][0]["body"]["details"]["id"]:
             x["status"] = 'resolved'
             listResolved.append(x)

@@ -223,6 +223,8 @@ def clearOldIncidents():
     for x in listDonDangLam:
         status = False
         for b in listincidents:
+            if "Vui lòng kiểm tra lại tool"in json.dumps(b,ensure_ascii=False):
+                continue
             if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
                 continue
             if x["_id"] == b["b"]["alerts"][0]["body"]["details"]["id"]:
@@ -233,15 +235,17 @@ def clearOldIncidents():
     for item in listincidents:
         b=item["b"]
         incident = item["incident"]
+        if "Vui lòng kiểm tra lại tool"in json.dumps(b,ensure_ascii=False):
+            continue
+        if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
+            incident["status"] = 'resolved'
+            listResolved.append(incident)
+            continue
         if b["alerts"][0]["body"]["details"]["id"] not in tempList:
             tempList.append(b["alerts"][0]["body"]["details"]["id"])
         else:
             incident["status"] = 'resolved'
             listResolved.append(incident)
-        if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
-                incident["status"] = 'resolved'
-                listResolved.append(incident)
-                continue
         status = False
         for y in listDonDangLam:
             if y["_id"] == b["alerts"][0]["body"]["details"]["id"]:
