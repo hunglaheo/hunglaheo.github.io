@@ -25,7 +25,7 @@ def log_uncaught_exceptions(exctype, value, tb):
         f.write(''.join(traceback.format_exception(exctype, value, tb)))
 # Đăng ký hàm `log_uncaught_exceptions` làm hàm xử lý cho các ngoại lệ không được xử lý
 sys.excepthook = log_uncaught_exceptions
-listTuKhoa = ["0981540301","CẦU THỜI ĐẠI","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI","55/107A/09","Tân Túc","Phong Phú","Phú Xuân","Block P1 Apartment 12-05","the sol city","Hưng Long, Bình Chánh","HUỲNH KIM THOA","TEST"]
+listTuKhoa = ["0981540301","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI","55/107A/09","Tân Túc","Phong Phú","Phú Xuân","Block P1 Apartment 12-05","the sol city","Hưng Long, Bình Chánh","HUỲNH KIM THOA","TEST"]
 with open("DanhSachKhachChan.txt","r") as f:
     khachHamtai = f.readlines()
     for x in range(len(khachHamtai)):
