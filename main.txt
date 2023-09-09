@@ -26,10 +26,7 @@ def log_uncaught_exceptions(exctype, value, tb):
 # Đăng ký hàm `log_uncaught_exceptions` làm hàm xử lý cho các ngoại lệ không được xử lý
 sys.excepthook = log_uncaught_exceptions
 listTuKhoa = ["0981540301","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI","55/107A/09","Tân Túc","Phong Phú","Phú Xuân","Block P1 Apartment 12-05","the sol city","Hưng Long, Bình Chánh","TÂN KIÊN, BÌNH CHÁNH","HUỲNH KIM THOA","TEST"]
-with open("DanhSachKhachChan.txt","r") as f:
-    khachHamtai = f.readlines()
-    for x in range(len(khachHamtai)):
-        khachHamtai[x] = khachHamtai[x].replace("\n","")
+
 employeeIdList = {}
 employeeIdList["khuvuc1"] = ["HvyJ3ZTEoJXt5LMHY","WQ7F4GcpRsZ8ysqAa","hrKQ2D6gZFXCu6erC","MYfbS4ge3yBfyTfSa","oAyYZcR6g2wc2nJzu","qsnoA2DLnaEFH7gBY"]
 employeeIdList["khuvuc2"] = ["jQX5yMD5vNFa7bHPN","x64a6247c025424efe76232c7","YgDY5nDi3twTSy6ES","GkfBMpS2Bu2XvDrhm"]
@@ -110,6 +107,25 @@ def websocket_message(flow: http.HTTPFlow):
             
 
 def checkNhanDon(taskID):
+    # đọc file đặt ở đây
+        #Không nhận đơn trước
+    with open("datgiokhongnhandon.txt","r") as f:
+        stringTime = f.readlines()
+    for x in range(2):
+        stringTime[x] = stringTime[x].replace("\n","")
+        if(len(stringTime[x])>10):
+            stringTime[x] = stringTime[x][:10]
+    try:
+        if int(stringTime[0]) < dt_object.timestamp() < int(stringTime[1]):
+            isLate = True
+    except:
+        print("Lỗi dòng 114")
+    with open("DanhSachKhachChan.txt","r") as f:
+        khachHamtai = f.readlines()
+        for x in range(len(khachHamtai)):
+            khachHamtai[x] = khachHamtai[x].replace("\n","")
+
+    #kết thúc đọc file
     isLate = False
     dt_now = datetime.now(timezone(timedelta(hours=7)))
     thongTinDon = getDetailsTask(taskID)
@@ -130,18 +146,7 @@ def checkNhanDon(taskID):
     if ((quanLamViec == "Cần Giờ") or (quanLamViec == "Củ Chi")):
         isLate = True
     # Block nhận đơn trễ
-    #Không nhận đơn trước
-    with open("datgiokhongnhandon.txt","r") as f:
-        stringTime = f.readlines()
-    for x in range(2):
-        stringTime[x] = stringTime[x].replace("\n","")
-        if(len(stringTime[x])>10):
-            stringTime[x] = stringTime[x][:10]
-    try:
-        if int(stringTime[0]) < dt_object.timestamp() < int(stringTime[1]):
-            isLate = True
-    except:
-        print("Lỗi dòng 114")
+    
     # Check đơn trễ
     if quanLamViec  == "Thủ Đức" or quanLamViec  == "Quận 2" or quanLamViec  == "Bình Thạnh" or quanLamViec  == "Phú Nhuận":
         if dt_object.hour == 18 and dt_object.minute > 30:
