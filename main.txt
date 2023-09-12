@@ -424,7 +424,10 @@ def pagerDuty(taskID):
         data1["ID Khách"] = thongTinDon["askerId"]
         data1["Quốc gia"] = getNational(thongTinDon["contactName"])
         data1["STD khách"]=thongTinDon["phone"]
-        data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+        try:
+            data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+        except:
+            pass
         date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
         data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
         try:
@@ -491,7 +494,10 @@ def pagerDuty(taskID):
         data1["ID Khách"] = thongTinDon["askerId"]
         data1["Quốc gia"] = getNational(thongTinDon["contactName"])
         data1["STD khách"]=thongTinDon["phone"]
-        data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+        try:
+            data1["Hình thức thanh toán"]=thongTinDon["paymentMethod"]
+        except:
+            pass
         date_obj = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
         data1["Giờ làm việc"]=date_obj.strftime("%d-%b-%Y (%H:%M)")
         ban_do=f"""https://www.google.com/maps/place/{thongTinDon["lat"]},{thongTinDon["lng"]}"""
