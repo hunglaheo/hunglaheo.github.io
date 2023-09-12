@@ -107,6 +107,14 @@ def websocket_message(flow: http.HTTPFlow):
             
 
 def checkNhanDon(taskID):
+    isLate = False
+    dt_now = datetime.now(timezone(timedelta(hours=7)))
+    thongTinDon = getDetailsTask(taskID)
+    if("acceptedTasker" in json.dumps(thongTinDon,ensure_ascii=False)):
+        isLate = True
+    print(thongTinDon)
+    dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
+    timeChenhLech = dt_object - dt_now
     # đọc file đặt ở đây
         #Không nhận đơn trước
     with open("datgiokhongnhandon.txt","r") as f:
@@ -128,14 +136,7 @@ def checkNhanDon(taskID):
             khachHamtai[x] = khachHamtai[x].replace("\n","")
 
     #kết thúc đọc file
-    isLate = False
-    dt_now = datetime.now(timezone(timedelta(hours=7)))
-    thongTinDon = getDetailsTask(taskID)
-    if("acceptedTasker" in json.dumps(thongTinDon,ensure_ascii=False)):
-        isLate = True
-    print(thongTinDon)
-    dt_object = datetime.strptime(thongTinDon["date"], '%Y-%m-%dT%H:%M:%S%z')
-    timeChenhLech = dt_object - dt_now
+    
     # nếu thời gian đặt đơn đến thời gian làm nhỏ hơn 60p thì không nhận
     if timeChenhLech.days == 0 and timeChenhLech.seconds < 3600:
         isLate = True
