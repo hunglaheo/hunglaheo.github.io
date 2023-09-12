@@ -123,8 +123,6 @@ def checkNhanDon(taskID):
         stringTime[x] = stringTime[x].replace("\n","")
         if(len(stringTime[x])>10):
             stringTime[x] = stringTime[x][:10]
-    print(stringTime[0])
-    print(stringTime)
     try:
         if int(stringTime[0]) < dt_object.timestamp() < int(stringTime[1]):
             isLate = True
