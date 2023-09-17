@@ -295,6 +295,9 @@ def clearOldIncidents():
 if __name__ == "__main__":
     while True:
         print("Clearing......")
-        clearOldIncidents()
+        try:
+            clearOldIncidents()
+        except Exception as ex:
+            print(ex)
         print("Sleeping.....")
         sleep(120)
