@@ -4,7 +4,7 @@ from time import sleep
 import pdpyras
 import json
 import http.client as pager
-from datetime import datetime
+from datetime import datetime, timedelta,timezone
 import requests
 import pycountry
 from dateutil.parser import parse
@@ -75,6 +75,7 @@ def pagerDuty(taskID):
             a = session.get(url=url)
             b = json.loads(a.text)
             if "Vui lòng kiểm tra lại tool" in json.dumps(b,ensure_ascii=False):
+
                 continue
             if taskID == b["alerts"][0]["body"]["details"]["id"]:
                 listResolved.append(x)
@@ -240,10 +241,16 @@ def clearOldIncidents():
         if not status:
             pagerDuty(x["_id"])
     tempList=[]
+    dt_now = datetime.now(timezone(timedelta(hours=7)))
     for item in listincidents:
         b=item["b"]
         incident = item["incident"]
         if "Vui lòng kiểm tra lại tool"in json.dumps(b,ensure_ascii=False):
+            dt_object = datetime.strptime(incident["created_at"], '%Y-%m-%dT%H:%M:%S%z')
+            timeChenhLech = dt_now - dt_object
+            if( timeChenhLech.seconds>3600 or timeChenhLech.days >0):
+                incident["status"] = 'resolved'
+                listResolved.append(incident)
             continue
         if "Mất đơn, vô kiểm tra ngay" in json.dumps(b,ensure_ascii=False):
             incident["status"] = 'resolved'
