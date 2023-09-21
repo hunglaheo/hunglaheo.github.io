@@ -316,7 +316,7 @@ def bookingTask(bockId,district):
     "taskId": bockId,
     "taskerId": employeeId,
     "companyId": "cdTh3MRr58vEPRB6k",
-    "appVersion": "3.0.3"
+    "appVersion": "3.0.5"
     })
     headers = {
     'accept': 'application/json, text/plain, */*',
@@ -334,7 +334,7 @@ def bookingTask(bockId,district):
             "taskId": bockId,
             "taskerId": employeeIdList["all"][x],
             "companyId": "cdTh3MRr58vEPRB6k",
-            "appVersion": "3.0.3"
+            "appVersion": "3.0.5"
             })
             headers = {
             'accept': 'application/json, text/plain, */*',
