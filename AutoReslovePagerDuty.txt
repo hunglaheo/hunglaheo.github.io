@@ -129,7 +129,10 @@ def pagerDuty(taskID):
             if "curtain" in thongTinDon["detail"]:
                 if "dryclean" in thongTinDon["detail"]["curtain"]:
                     for x in thongTinDon["detail"]["curtain"]["dryclean"]:
-                        strRem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+                        try:
+                            strRem+=x["text"]["vi"] + ": Số lượng: "+str(x["quantity"])+" ,"
+                        except:
+                            pass
                 if "washing" in thongTinDon["detail"]["curtain"]:
                     for x in thongTinDon["detail"]["curtain"]["washing"]:
                         if "vi" in x:
