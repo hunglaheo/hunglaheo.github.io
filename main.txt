@@ -124,7 +124,7 @@ def checkNhanDon(taskID):
         if(len(stringTime[x])>10):
             stringTime[x] = stringTime[x][:10]
     try:
-        if int(stringTime[0]) < dt_object.timestamp() < int(stringTime[1]):
+        if int(stringTime[0]) <= dt_object.timestamp() <= int(stringTime[1]):
             isLate = True
     except:
         print("Lỗi dòng 114")
