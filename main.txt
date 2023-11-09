@@ -230,7 +230,7 @@ def checkNhanDon(taskID):
 
     # Loại bỏ đơn chỉ có rèm nước
     if ("washing" in json.dumps(thongTinDon,ensure_ascii=False)) and ("curtain" in json.dumps(thongTinDon,ensure_ascii=False)):
-        if thongTinDon["cost"] < 1500000:
+        if thongTinDon["cost"] < 3000000:
             isLate = True
     thongTinDonUpper = json.dumps(thongTinDon,ensure_ascii=False).upper()
     for x in listTuKhoa:
