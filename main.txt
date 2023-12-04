@@ -29,7 +29,7 @@ listTuKhoa = ["0981540301","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI
 
 employeeIdList = {}
 employeeIdList["khuvuc1"] = ["HvyJ3ZTEoJXt5LMHY","WQ7F4GcpRsZ8ysqAa","hrKQ2D6gZFXCu6erC","MYfbS4ge3yBfyTfSa","oAyYZcR6g2wc2nJzu","qsnoA2DLnaEFH7gBY"]
-employeeIdList["khuvuc2"] = ["jQX5yMD5vNFa7bHPN","x64a6247c025424efe76232c7","YgDY5nDi3twTSy6ES","GkfBMpS2Bu2XvDrhm"]
+employeeIdList["khuvuc2"] = ["x64a6247c025424efe76232c7","YgDY5nDi3twTSy6ES","GkfBMpS2Bu2XvDrhm"]
 employeeIdList["all"] = employeeIdList["khuvuc1"] + employeeIdList["khuvuc2"]
 #from mitmproxy.proxy import protocol
 #def websocket_message(flow:websocket.WebSocketFlow):
