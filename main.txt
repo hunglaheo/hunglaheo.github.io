@@ -73,18 +73,19 @@ addons = [
     BlockURLAddon()
 ]
 def websocket_message(flow: http.HTTPFlow):
-    #flow.messages[-1].content=""
     data=bytes(flow.websocket.messages[-1].content).decode() 
-    data=data.replace("O'", "")
-    data=data.replace("'", "\"")
-    data=data.replace("True", "\"True\"")
-    data=data.replace("False", "\"False\"")
-    data=data.replace("None", "\"None\"")
-    data=data.replace("\n","")
-    data=data.replace("null","\"null\"")
-    #print(vars(flow.messages[-1]))
-    hopLe = False
     try:
+            #flow.messages[-1].content=""
+        
+        data=data.replace("O'", "")
+        data=data.replace("'", "\"")
+        data=data.replace("True", "\"True\"")
+        data=data.replace("False", "\"False\"")
+        data=data.replace("None", "\"None\"")
+        data=data.replace("\n","")
+        data=data.replace("null","\"null\"")
+        #print(vars(flow.messages[-1]))
+        hopLe = False
         #Đoạn này bypass logout khi bị đăng nhập trên thiết bị khác
         # if "TOKEN_EXPIRED" in data:
         #     flow.websocket.messages[-1].drop()
@@ -97,6 +98,7 @@ def websocket_message(flow: http.HTTPFlow):
         else:
             flow.websocket.messages[-1].drop()
     except:
+        print(data)
         flow.websocket.messages[-1].drop()
     if hopLe:
         if "acceptedTasker" not in data["data"].keys() and "status" in data["data"].keys():
