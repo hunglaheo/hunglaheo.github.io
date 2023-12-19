@@ -244,12 +244,14 @@ def checkNhanDon(taskID):
         time.sleep(a/1000)
         bockID = thongTinDon["_id"]
         print(bockID)
-        result = bookingTask(bockID,quanLamViec)# đặt đơn
-        if result == 1:
-            #Gửi thông báo vô pager duty
-            pagerDuty(bockID)
-        else:
-            pagerDutyLoss()
+        print("Nhận đơn")
+        #result = bookingTask(bockID,quanLamViec)# đặt đơn uncomment từ đây
+        # if result == 1:
+        #     #Gửi thông báo vô pager duty
+        #     pagerDuty(bockID)
+        # else:
+        #     pagerDutyLoss() đến đây
+
     else:
     # Ghi thông tin không nhận đơn
         with open('danhsachkhongnhan.json','a',encoding="utf-8") as f:
