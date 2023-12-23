@@ -28,7 +28,7 @@ sys.excepthook = log_uncaught_exceptions
 listTuKhoa = ["0981540301","SOFA MÀU TRẮNG KEM","GIẶT SẠCH TUYỆT ĐỐI","55/107A/09","Tân Túc","Phong Phú","Phú Xuân","Block P1 Apartment 12-05","the sol city","Hưng Long, Bình Chánh","TÂN KIÊN, BÌNH CHÁNH","HUỲNH KIM THOA","TEST","THẢM VĂN PHÒNG", "THẢM LÓT SÀN VĂN PHÒNG"]
 
 employeeIdList = {}
-employeeIdList["khuvuc1"] = ["HvyJ3ZTEoJXt5LMHY","WQ7F4GcpRsZ8ysqAa","hrKQ2D6gZFXCu6erC","MYfbS4ge3yBfyTfSa","oAyYZcR6g2wc2nJzu","qsnoA2DLnaEFH7gBY"]
+employeeIdList["khuvuc1"] = ["HvyJ3ZTEoJXt5LMHY","WQ7F4GcpRsZ8ysqAa","hrKQ2D6gZFXCu6erC","MYfbS4ge3yBfyTfSa","oAyYZcR6g2wc2nJzu","qsnoA2DLnaEFH7gBY","x657ff02aec2dd608aefef4cb","x658116a3c097c41cf848bf00"]
 employeeIdList["khuvuc2"] = ["x64a6247c025424efe76232c7","YgDY5nDi3twTSy6ES","GkfBMpS2Bu2XvDrhm","x6576614371f3184727d142ca"]
 employeeIdList["all"] = employeeIdList["khuvuc1"] + employeeIdList["khuvuc2"]
 #from mitmproxy.proxy import protocol
@@ -232,7 +232,7 @@ def checkNhanDon(taskID):
 
     # Loại bỏ đơn chỉ có rèm nước
     if ("washing" in json.dumps(thongTinDon,ensure_ascii=False)) and ("curtain" in json.dumps(thongTinDon,ensure_ascii=False)):
-        if thongTinDon["cost"] < 600000:
+        if thongTinDon["cost"] < 500000:
             isLate = True
     thongTinDonUpper = json.dumps(thongTinDon,ensure_ascii=False).upper()
     for x in listTuKhoa:
