@@ -232,7 +232,7 @@ def checkNhanDon(taskID):
 
     # Loại bỏ đơn chỉ có rèm nước
     if ("washing" in json.dumps(thongTinDon,ensure_ascii=False)) and ("curtain" in json.dumps(thongTinDon,ensure_ascii=False)):
-        if thongTinDon["cost"] < 500000:
+        if thongTinDon["cost"] < 599000:
             isLate = True
     thongTinDonUpper = json.dumps(thongTinDon,ensure_ascii=False).upper()
     for x in listTuKhoa:
@@ -245,12 +245,12 @@ def checkNhanDon(taskID):
         bockID = thongTinDon["_id"]
         print(bockID)
         print("Nhận đơn")
-        #result = bookingTask(bockID,quanLamViec)# đặt đơn uncomment từ đây
-        # if result == 1:
-        #     #Gửi thông báo vô pager duty
-        #     pagerDuty(bockID)
-        # else:
-        #     pagerDutyLoss() đến đây
+        result = bookingTask(bockID,quanLamViec)
+        if result == 1:
+            #Gửi thông báo vô pager duty
+            pagerDuty(bockID)
+        else:
+            pagerDutyLoss()
 
     else:
     # Ghi thông tin không nhận đơn
